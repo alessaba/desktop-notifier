@@ -4,11 +4,13 @@ import signal
 
 from desktop_notifier import DEFAULT_SOUND, Button, DesktopNotifier, ReplyField, Urgency
 
+
 # Integrate with Core Foundation event loop on macOS to allow receiving callbacks.
 if platform.system() == "Darwin":
-    from rubicon.objc.eventloop import EventLoopPolicy
+    from rubicon.objc.eventloop import RubiconEventLoop
 
-    asyncio.set_event_loop_policy(EventLoopPolicy())
+    loop = RubiconEventLoop()
+    asyncio.set_event_loop(loop)
 
 
 async def main() -> None:
