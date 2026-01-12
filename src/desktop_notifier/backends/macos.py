@@ -175,7 +175,6 @@ class CocoaNotificationCenter(DesktopNotifierBackend):
         def handler(settings: objc_id) -> None:
             settings = py_from_ns(settings)
             future.set_result(settings)
-            future.set_result(settings)
 
         self.nc.getNotificationSettingsWithCompletionHandler(handler)
 
