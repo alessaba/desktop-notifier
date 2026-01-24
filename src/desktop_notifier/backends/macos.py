@@ -8,6 +8,7 @@ UNUserNotificationCenter backend for macOS
   signed Python framework (for example from python.org).
 * Requires a running CFRunLoop to invoke callbacks.
 """
+
 from __future__ import annotations
 
 import asyncio
@@ -84,12 +85,12 @@ class UNNotificationInterruptionLevel(enum.Enum):
 ReplyActionIdentifier = "com.desktop-notifier.ReplyActionIdentifier"
 
 
-class NotificationCenterDelegate(NSObject):  # type:ignore[misc]
+class NotificationCenterDelegate(NSObject):  # type: ignore[misc]
     """Delegate to handle user interactions with notifications"""
 
     implementation: CocoaNotificationCenter
 
-    @objc_method  # type:ignore[untyped-decorator]
+    @objc_method  # type: ignore[untyped-decorator]
     def userNotificationCenter_didReceiveNotificationResponse_withCompletionHandler_(
         self, center: objc_id, response: objc_id, completion_handler: objc_block
     ) -> None:
@@ -170,7 +171,7 @@ class CocoaNotificationCenter(DesktopNotifierBackend):
 
     async def has_authorisation(self) -> bool:
         """Whether we have authorisation to send notifications."""
-        future: Future[UNNotificationSettings] = Future()  # type:ignore[valid-type]
+        future: Future[UNNotificationSettings] = Future()  # type: ignore[valid-type]
 
         def handler(settings: objc_id) -> None:
             settings = py_from_ns(settings)
@@ -179,14 +180,14 @@ class CocoaNotificationCenter(DesktopNotifierBackend):
         self.nc.getNotificationSettingsWithCompletionHandler(handler)
 
         settings = await asyncio.wrap_future(future)
-        return settings.authorizationStatus in (  # type:ignore[attr-defined]
+        return settings.authorizationStatus in (  # type: ignore[attr-defined]
             UNAuthorizationStatusAuthorized,
             UNAuthorizationStatusProvisional,
             UNAuthorizationStatusEphemeral,
         )
 
     async def get_current_notifications(self) -> list[str]:
-        future: Future[list[UNNotification]] = Future()  # type:ignore[valid-type]
+        future: Future[list[UNNotification]] = Future()  # type: ignore[valid-type]
 
         def handler(notifications: objc_id) -> None:
             notifications = py_from_ns(notifications)
@@ -198,12 +199,12 @@ class CocoaNotificationCenter(DesktopNotifierBackend):
 
         notifications = await asyncio.wrap_future(future)
         identifiers = [
-            str(n.request.identifier)  # type:ignore[attr-defined]
+            str(n.request.identifier)  # type: ignore[attr-defined]
             for n in notifications
         ]
 
         for notification in notifications:
-            notification.autorelease()  # type:ignore[attr-defined]
+            notification.autorelease()  # type: ignore[attr-defined]
 
         return identifiers
 
@@ -256,7 +257,7 @@ class CocoaNotificationCenter(DesktopNotifierBackend):
             notification.identifier, content=content, trigger=None
         )
 
-        future: Future[NSError] = Future()  # type:ignore[valid-type]
+        future: Future[NSError] = Future()  # type: ignore[valid-type]
 
         def handler(error: objc_id) -> None:
             ns_error = py_from_ns(error)
@@ -302,7 +303,7 @@ class CocoaNotificationCenter(DesktopNotifierBackend):
         categories = await self._get_notification_categories()
         category_ids = set(
             py_from_ns(c.identifier)
-            for c in categories.allObjects()  # type:ignore[attr-defined]
+            for c in categories.allObjects()  # type: ignore[attr-defined]
         )
 
         # Register new category if necessary.
@@ -330,7 +331,7 @@ class CocoaNotificationCenter(DesktopNotifierBackend):
                 actions.append(action)
 
             # Add category for new set of buttons.
-            new_categories = categories.setByAddingObject(  # type:ignore[attr-defined]
+            new_categories = categories.setByAddingObject(  # type: ignore[attr-defined]
                 UNNotificationCategory.categoryWithIdentifier(
                     category_id,
                     actions=actions,
@@ -342,9 +343,9 @@ class CocoaNotificationCenter(DesktopNotifierBackend):
 
         return category_id
 
-    async def _get_notification_categories(self) -> NSSet:  # type:ignore[valid-type]
+    async def _get_notification_categories(self) -> NSSet:  # type: ignore[valid-type]
         """Returns the registered notification categories for this app / Python."""
-        future: Future[NSSet] = Future()  # type:ignore[valid-type]
+        future: Future[NSSet] = Future()  # type: ignore[valid-type]
 
         def handler(categories: objc_id) -> None:
             categories = py_from_ns(categories)
@@ -394,10 +395,10 @@ class CocoaNotificationCenter(DesktopNotifierBackend):
         return frozenset(capabilities)
 
 
-def log_nserror(error: NSError, prefix: str) -> None:  # type:ignore[valid-type]
-    domain = str(error.domain)  # type:ignore[attr-defined]
-    code = int(error.code)  # type:ignore[attr-defined]
-    description = str(error.localizedDescription)  # type:ignore[attr-defined]
+def log_nserror(error: NSError, prefix: str) -> None:  # type: ignore[valid-type]
+    domain = str(error.domain)  # type: ignore[attr-defined]
+    code = int(error.code)  # type: ignore[attr-defined]
+    description = str(error.localizedDescription)  # type: ignore[attr-defined]
 
     logger.warning(
         "%s: domain=%s, code=%s, description=%s", prefix, domain, code, description

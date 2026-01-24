@@ -2,6 +2,7 @@
 """
 Desktop notifications for Windows, Linux, macOS, iOS and iPadOS.
 """
+
 from .main import (
     DEFAULT_ICON,
     DEFAULT_SOUND,

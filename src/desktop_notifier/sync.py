@@ -2,6 +2,7 @@
 """
 Synchronous desktop notification API
 """
+
 from __future__ import annotations
 
 import asyncio

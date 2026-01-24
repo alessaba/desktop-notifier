@@ -2,6 +2,7 @@
 """
 This module defines the abstract implementation class that backends must inherit from.
 """
+
 from __future__ import annotations
 
 import logging

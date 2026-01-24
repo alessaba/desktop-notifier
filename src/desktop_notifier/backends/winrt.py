@@ -7,6 +7,7 @@ ctypes because the C winapi only supports basic notifications with a title and m
 This backend therefore requires interaction with the Windows Runtime and uses the winrt
 package with compiled components.
 """
+
 from __future__ import annotations
 
 import logging
@@ -322,7 +323,7 @@ class WinRTDesktopNotifier(DesktopNotifierBackend):
         }
         # Custom audio is support only starting with the Windows 10 Anniversary update.
         # See https://learn.microsoft.com/en-us/windows/apps/design/shell/tiles-and-notifications/custom-audio-on-toasts#add-the-custom-audio.
-        if sys.getwindowsversion().build >= 1607:  # type:ignore[attr-defined]
+        if sys.getwindowsversion().build >= 1607:  # type: ignore[attr-defined]
             capabilities.add(Capability.SOUND_FILE)
 
         return frozenset(capabilities)

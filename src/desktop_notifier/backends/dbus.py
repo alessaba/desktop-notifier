@@ -5,6 +5,7 @@ Notification backend for Linux
 Includes an implementation to send desktop notifications over Dbus. Responding to user
 interaction with a notification requires a running asyncio event loop.
 """
+
 from __future__ import annotations
 
 import logging
@@ -174,7 +175,7 @@ class DBusDesktopNotifier(DesktopNotifierBackend):
 
         # dbus_next proxy APIs are generated at runtime. Silence the type checker but
         # raise an AttributeError if required.
-        platform_id = await self.interface.call_notify(  # type:ignore[attr-defined]
+        platform_id = await self.interface.call_notify(  # type: ignore[attr-defined]
             self.app_name,
             0,
             icon,
@@ -202,7 +203,7 @@ class DBusDesktopNotifier(DesktopNotifierBackend):
         try:
             # dbus_next proxy APIs are generated at runtime. Silence the type checker
             # but raise an AttributeError if required.
-            await self.interface.call_close_notification(  # type:ignore[attr-defined]
+            await self.interface.call_close_notification(  # type: ignore[attr-defined]
                 platform_id
             )
         except DBusError:
@@ -290,7 +291,7 @@ class DBusDesktopNotifier(DesktopNotifierBackend):
             capabilities.add(Capability.ON_DISMISSED)
 
         server_info = (
-            await self.interface.call_get_server_information()  # type:ignore[attr-defined]
+            await self.interface.call_get_server_information()  # type: ignore[attr-defined]
         )
 
         # xfce4-notifyd does not support a "default" action when the notification is
@@ -298,7 +299,7 @@ class DBusDesktopNotifier(DesktopNotifierBackend):
         if server_info[0] != "Xfce Notify Daemon":
             capabilities.add(Capability.ON_CLICKED)
 
-        cps = await self.interface.call_get_capabilities()  # type:ignore[attr-defined]
+        cps = await self.interface.call_get_capabilities()  # type: ignore[attr-defined]
 
         if "actions" in cps:
             capabilities.add(Capability.BUTTONS)
