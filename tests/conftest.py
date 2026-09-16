@@ -11,6 +11,12 @@ import pytest_asyncio
 from desktop_notifier import DesktopNotifier, DesktopNotifierSync
 
 if platform.system() == "Darwin":
+    from rubicon.objc.runtime import load_library
+
+    # Load AppKit before importing the event loop policy. rubicon-objc 0.5.5 and
+    # later no longer load it implicitly when resolving NSEvent.
+    load_library("AppKit")
+
     from rubicon.objc.eventloop import EventLoopPolicy
 
     asyncio.set_event_loop_policy(EventLoopPolicy())
